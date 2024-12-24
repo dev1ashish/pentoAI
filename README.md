@@ -1,54 +1,146 @@
-# Pentov1 Crew
+# 🛡️ PentoV1 Security Assessment Tool
+Welcome to PentoV1, an advanced security assessment tool powered by crewAI and Flask. This project combines the power of AI-driven security analysis with a user-friendly web interface, enabling automated security assessments of web applications.
+## ✨ Features
+- 🤖 **AI-Powered Security Assessment**: Leverages crewAI for intelligent security analysis
+- 🌐 **Web Interface**: Clean, modern interface built with Flask and Tailwind CSS
+- 📊 **Real-time Visualization**: Interactive 3D visualization using Three.js
+- 📝 **Comprehensive Reporting**: Detailed security reports with actionable insights
+- 🔒 **JWT Security Analysis**: Advanced JWT vulnerability testing and assessment
+- 🔍 **ZAP Integration**: Automated security scanning using OWASP ZAP
+- ## 🖥️ UI Screenshots
 
-Welcome to the Pentov1 Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
-
-## Installation
-
-Ensure you have Python >=3.10 <=3.13 installed on your system. This project uses [Poetry](https://python-poetry.org/) for dependency management and package handling, offering a seamless setup and execution experience.
-
-First, if you haven't already, install Poetry:
-
+### 🎯 Main Dashboard
+!Security Assessment Tool Dashboard
+The main dashboard features a clean interface with a URL input field and an interactive 3D security visualization.
+### 📊 Assessment Results
+!Assessment Results
+Detailed assessment results showing discovered vulnerabilities and their severity levels.
+### 💻 Terminal Output
+!Exploitation Results
+Sample terminal output showing exploitation results and remediation recommendations.
+### 📑 Report Summary
+!Report Summary
+A comprehensive summary of findings and recommendations for security improvements.
+## 🚀 Prerequisites
+- 🐍 Python >= 3.10, <= 3.13
+- 📦 Poetry for dependency management
+- 🔒 OWASP ZAP
+- 🔑 Mistral AI API key
+- 🗝️ ZAP API key
+## ⚡ Installation
+1. Install Poetry if you haven't already:
 ```bash
 pip install poetry
 ```
-
-Next, navigate to your project directory and install the dependencies:
-
-1. First lock the dependencies and install them by using the CLI command:
+2. Clone the repository:
 ```bash
-crewai install
+git clone <your-repo-url>
+cd pentov1
 ```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/pentov1/config/agents.yaml` to define your agents
-- Modify `src/pentov1/config/tasks.yaml` to define your tasks
-- Modify `src/pentov1/crew.py` to add your own logic, tools and specific args
-- Modify `src/pentov1/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
+3. Install dependencies:
 ```bash
-$ crewai run
+poetry install
 ```
-
-This command initializes the pentov1 Crew, assembling the agents and assigning them tasks as defined in your configuration.
-
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
-
-## Understanding Your Crew
-
-The pentov1 Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
-
-## Support
-
-For support, questions, or feedback regarding the Pentov1 Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+4. Set up environment variables in .env:
+```env
+MISTRAL_API_KEY=your_mistral_api_key
+ZAP_API_KEY=your_zap_api_key
+```
+## 📁 Project Structure
+```
+pentov1/
+├── server/
+│   ├── init.py
+│   ├── app.py          # Flask application setup
+│   ├── routes.py       # API endpoints and routes
+│   └── templates/
+│       └── index.html  # Web interface template
+├── pentov1/
+│   ├── init.py
+│   ├── agents.py       # AI agent definitions
+│   ├── tasks.py        # Security assessment tasks
+│   ├── tools.py        # Security testing tools
+│   └── main.py         # Main application logic
+├── pyproject.toml      # Project dependencies
+└── README.md
+```
+## 🚀 Running the Application
+1. Start the Flask server:
+```bash
+python run_server.py
+```
+2. Access the web interface at http://localhost:5000
+## 🎮 Using the Web Interface
+1. 🎯 Enter the target site URL in the input field
+2. 🚀 Click "Run Assessment" to start the security assessment
+3. 📊 View real-time progress with the 3D visualization
+4. 📝 Access detailed reports in the "Previous Reports" section
+As shown in the screenshots, the tool provides:
+- 🔍 Real-time vulnerability scanning
+- 📊 Detailed findings with severity levels
+- 🌐 Interactive 3D security visualization
+- 📝 Comprehensive remediation recommendations
+## 🛡️ Security Assessment Components
+### 1. 🔍 Reconnaissance Phase
+- Discovers API endpoints
+- Maps API structure
+- Identifies authentication methods
+### 2. 🔒 Vulnerability Assessment
+- Tests for SQL Injection vulnerabilities
+- Analyzes JWT implementation
+- Checks for authentication weaknesses
+- Assesses access control mechanisms
+### 3. ⚔️ Exploitation Verification
+- Safely verifies identified vulnerabilities
+- Documents exploitation attempts
+- Provides proof-of-concept examples
+### 4. 📊 Report Generation
+- Creates detailed security reports
+- Prioritizes vulnerabilities by risk level
+- Provides actionable remediation steps
+## 🔌 API Endpoints
+- POST /run_assessment: Initiates a security assessment
+- GET /get_reports: Retrieves all assessment reports
+- GET /get_report/<filename>: Fetches a specific report
+## ⚙️ Customization
+### 🤖 Adding New Security Agents
+Modify pentov1/agents.py:
+```python
+new_agent = Agent(
+role="Your New Agent Role",
+goal="Agent's Security Goal",
+backstory="""Agent's expertise and background""",
+tools=[your_tools],
+llm=mistral,
+verbose=True
+)
+```
+### 🛠️ Creating Custom Security Tools
+Add new tools in pentov1/tools.py:
+```python
+def your_custom_tool(parameters):
+# Implement your security testing logic
+return results
+```
+## 📋 Security Report Example
+As shown in the screenshots, reports include:
+1. 🔍 Reconnaissance findings
+2. 🔒 Vulnerability assessment results
+3. ⚔️ Exploitation verification
+4. ⚖️ Risk prioritization
+5. 🛠️ Remediation recommendations
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+## 💬 Support
+For support and questions:
+- 📝 Submit an issue on GitHub
+- 📚 Visit crewAI documentation
+- 💬 Join the crewAI Discord
+## 📄 License
+[Your chosen license]
+## 🙏 Acknowledgments
+- 🤖 crewAI for the AI agent framework
+- 🔒 OWASP ZAP for security scanning capabilities
+- 🧠 Mistral AI for language model support
