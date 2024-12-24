@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Assessment Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@shadcn/ui@0.1.0/dist/shadcn-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <canvas id="securityCanvas" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
+    <div class="max-w-4xl mx-auto bg-white bg-opacity-90 shadow-lg rounded-lg p-6 relative z-10">
+        <h1 class="text-3xl font-bold mb-6">Security Assessment Tool</h1>
+        <form id="assessmentForm" class="mb-8">
+            <div class="flex space-x-4">
+                <input type="text" id="targetSite" placeholder="Enter target site URL" required
+                    class="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Run Assessment
+                </button>
+            </div>
+        </form>
+        <div id="result" class="mb-8 p-4 bg-gray-50 rounded-md"></div>
+        <h2 class="text-2xl font-semibold mb-4">Previous Reports</h2>
+        <ul id="reportsList" class="space-y-2"></ul>
+    </div>
+
+    <script>
+        document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const targetSite = document.getElementById('targetSite').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Running assessment...';
+            try {
+                const response = await axios.post('/run_assessment', `target_site=${targetSite}`, {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                });
+                displayFormattedResults(response.data.results);
+                loadReports();
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.response.data.error}`;
+            }
+        });
+
+        function displayFormattedResults(results) {
+            const resultDiv = document.getElementById('result');
+            let formattedHtml = '<h3 class="text-xl font-semibold mb-4">Assessment Results</h3>';
+            
+            if (results.target_site) {
+                formattedHtml += `<p><strong>Target Site:</strong> ${results.target_site}</p>`;
+            }
+            if (results.assessment_date) {
+                formattedHtml += `<p><strong>Assessment Date:</strong> ${new Date(results.assessment_date).toLocaleString()}</p>`;
+            }
+            
+            if (results.findings) {
+                formattedHtml += '<h4 class="text-lg font-semibold mt-4 mb-2">Findings:</h4>';
+                const findings = results.findings.split('\n\n');
+                findings.forEach(section => {
+                    const [title, ...content] = section.split('\n');
+                    formattedHtml += `<h5 class="font-semibold mt-3">${title}</h5>`;
+                    formattedHtml += '<ul class="list-disc list-inside ml-4">';
+                    content.forEach(item => {
+                        formattedHtml += `<li>${item}</li>`;
+                    });
+                    formattedHtml += '</ul>';
+                });
+            }
+            
+            resultDiv.innerHTML = formattedHtml;
+        }
+
+        async function loadReports() {
+            const reportsList = document.getElementById('reportsList');
+            try {
+                const response = await axios.get('/get_reports');
+                reportsList.innerHTML = response.data.map(report => 
+                    `<li class="p-2 bg-white rounded-md shadow hover:shadow-md transition-shadow">
+                        <a href="#" onclick="loadReport('${report.filename}')" class="text-blue-500 hover:underline">
+                            ${report.target_site} - ${new Date(report.assessment_date).toLocaleString()}
+                        </a>
+                    </li>`
+                ).join('');
+            } catch (error) {
+                reportsList.innerHTML = `<li class="text-red-500">Error loading reports: ${error}</li>`;
+            }
+        }
+
+        async function loadReport(filename) {
+            const resultDiv = document.getElementById('result');
+            try {
+                const response = await axios.get(`/get_report/${filename}`);
+                displayFormattedResults(response.data);
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-red-500">Error loading report: ${error}</p>`;
+            }
+        }
+
+        loadReports();
+
+        // Three.js Security Breach Theme
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('securityCanvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.IcosahedronGeometry(1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const icosahedron = new THREE.Mesh(geometry, material);
+        scene.add(icosahedron);
+
+        camera.position.z = 5;
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            icosahedron.rotation.x += 0.01;
+            icosahedron.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
