@@ -9,17 +9,18 @@ Welcome to PentoV1, an advanced security assessment tool powered by crewAI and F
 - 🔍 **ZAP Integration**: Automated security scanning using OWASP ZAP
 - ## 🖥️ UI Screenshots
 
-### 🎯 Main Dashboard
-!Security Assessment Tool Dashboard
-The main dashboard features a clean interface with a URL input field and an interactive 3D security visualization.
+
 ### 📊 Assessment Results
-!Assessment Results
+![assesments](assets/img.png)
+![assesments1](assets/imag.png)
+
 Detailed assessment results showing discovered vulnerabilities and their severity levels.
 ### 💻 Terminal Output
-!Exploitation Results
+![Exploitation Results](assets/op1.png)
+
 Sample terminal output showing exploitation results and remediation recommendations.
 ### 📑 Report Summary
-!Report Summary
+![Exploitation Results](assets/op2.png)
 A comprehensive summary of findings and recommendations for security improvements.
 ## 🚀 Prerequisites
 - 🐍 Python >= 3.10, <= 3.13
@@ -34,7 +35,7 @@ pip install poetry
 ```
 2. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone <repo-url>
 cd pentov1
 ```
 3. Install dependencies:
@@ -137,10 +138,4 @@ As shown in the screenshots, reports include:
 For support and questions:
 - 📝 Submit an issue on GitHub
 - 📚 Visit crewAI documentation
-- 💬 Join the crewAI Discord
-## 📄 License
-[Your chosen license]
-## 🙏 Acknowledgments
-- 🤖 crewAI for the AI agent framework
-- 🔒 OWASP ZAP for security scanning capabilities
-- 🧠 Mistral AI for language model support
+
