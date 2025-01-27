@@ -1,4 +1,4 @@
-# 🛡️ PentoV1 Security Assessment Tool
+# 🛡️ PentoA1 Security Assessment Tool
 Welcome to PentoV1, an advanced security assessment tool powered by crewAI and Flask. This project combines the power of AI-driven security analysis with a user-friendly web interface, enabling automated security assessments of web applications.
 ## ✨ Features
 - 🤖 **AI-Powered Security Assessment**: Leverages crewAI for intelligent security analysis
